@@ -11,21 +11,18 @@ requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [{ name = "Jacob Russell" }]
 keywords = ["mtg", "cli", "deck", "tracker", "python"]
-
-# No runtime deps right now
 dependencies = []
 
 [project.optional-dependencies]
 dev = [
   "pytest>=8",
-  "ruff>=0.7",
+  "ruff==0.15.1",
 ]
 
 [project.scripts]
 deck-tracker = "main:main"
 
 [tool.setuptools]
-# Package the project as simple modules (no folder restructure needed)
 py-modules = ["main", "deck", "card", "decklist_io", "matchups"]
 
 [tool.pytest.ini_options]
@@ -40,9 +37,7 @@ extend-exclude = ["__pycache__", ".venv", "venv", "build", "dist"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
-ignore = [
-  "E501",  # let formatter handle long lines
-]
+ignore = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"
