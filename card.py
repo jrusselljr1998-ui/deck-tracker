@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 
 def normalize_name(name: str) -> str:
@@ -7,7 +6,7 @@ def normalize_name(name: str) -> str:
     return " ".join(name.strip().lower().split())
 
 
-def parse_mana_cost(raw: str) -> tuple[Optional[int], bool, str]:
+def parse_mana_cost(raw: str) -> tuple[int | None, bool, str]:
     """
     Returns (numeric_cost, has_x, display_cost)
 
@@ -59,7 +58,7 @@ class CardEntry:
         return has_x
 
     @property
-    def numeric_cost(self) -> Optional[int]:
+    def numeric_cost(self) -> int | None:
         numeric, _, _ = parse_mana_cost(self.mana_cost_raw)
         return numeric
 

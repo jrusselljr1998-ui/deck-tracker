@@ -1,7 +1,6 @@
+import difflib
 import json
 import os
-import difflib
-from typing import Optional
 
 from card import CardEntry, normalize_name
 
@@ -47,7 +46,7 @@ class Deck:
         return True
 
     def update_card(
-        self, name: str, *, mana_cost: Optional[str] = None, card_type: Optional[str] = None
+        self, name: str, *, mana_cost: str | None = None, card_type: str | None = None
     ) -> bool:
         key = normalize_name(name)
         if key not in self._cards:
@@ -74,7 +73,7 @@ class Deck:
             self._cards[new_key] = entry
         return True
 
-    def get(self, name: str) -> Optional[CardEntry]:
+    def get(self, name: str) -> CardEntry | None:
         return self._cards.get(normalize_name(name))
 
     def all_entries(self) -> list[CardEntry]:
@@ -106,12 +105,12 @@ class Deck:
     def filter_entries(
         self,
         *,
-        name_contains: Optional[str] = None,
-        type_contains: Optional[str] = None,
-        cost_eq: Optional[int] = None,
-        cost_lte: Optional[int] = None,
-        cost_gte: Optional[int] = None,
-        has_x: Optional[bool] = None,
+        name_contains: str | None = None,
+        type_contains: str | None = None,
+        cost_eq: int | None = None,
+        cost_lte: int | None = None,
+        cost_gte: int | None = None,
+        has_x: bool | None = None,
         sort_by: str = "name",  # name|type|cost
     ) -> list[CardEntry]:
         """
@@ -193,7 +192,7 @@ class Deck:
             return deck
 
         try:
-            with open(filepath, "r", encoding="utf-8") as f:
+            with open(filepath, encoding="utf-8") as f:
                 data = json.load(f)
 
             # NEW format

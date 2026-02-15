@@ -1,7 +1,6 @@
 from deck import Deck
-from decklist_io import import_decklist_text, export_decklist_text
+from decklist_io import export_decklist_text, import_decklist_text
 from matchups import MatchupTracker
-
 
 DECK_FILE = "deck.json"
 MATCHUPS_FILE = "matchups.json"

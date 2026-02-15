@@ -1,5 +1,5 @@
 from deck import Deck
-from decklist_io import parse_decklist_lines, import_decklist_text, export_decklist_text
+from decklist_io import export_decklist_text, import_decklist_text, parse_decklist_lines
 
 
 def test_parse_decklist_lines_supports_qty_x_and_singletons_and_ignores_comments():

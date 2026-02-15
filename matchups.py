@@ -4,7 +4,6 @@ import json
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
 
 
 def _now_iso() -> str:
@@ -32,7 +31,7 @@ class Match:
         }
 
     @staticmethod
-    def from_dict(d: dict) -> "Match":
+    def from_dict(d: dict) -> Match:
         opponent = str(d.get("opponent", "")).strip()
         result = str(d.get("result", "")).strip().upper()
         played_at = str(d.get("played_at", "")).strip()
@@ -68,7 +67,7 @@ class MatchupTracker:
     def all_matches(self) -> list[Match]:
         return list(self._matches)
 
-    def recent(self, n: int = 10, opponent_filter: Optional[str] = None) -> list[Match]:
+    def recent(self, n: int = 10, opponent_filter: str | None = None) -> list[Match]:
         items = self._matches
         if opponent_filter:
             key = normalize_text(opponent_filter)
@@ -146,13 +145,13 @@ class MatchupTracker:
             json.dump(self.to_dict(), f, indent=2)
 
     @staticmethod
-    def load(filepath: str) -> "MatchupTracker":
+    def load(filepath: str) -> MatchupTracker:
         t = MatchupTracker()
         if not os.path.exists(filepath):
             return t
 
         try:
-            with open(filepath, "r", encoding="utf-8") as f:
+            with open(filepath, encoding="utf-8") as f:
                 data = json.load(f)
 
             if isinstance(data, dict):
