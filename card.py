@@ -44,8 +44,8 @@ def parse_mana_cost(raw: str) -> tuple[Optional[int], bool, str]:
 
 @dataclass
 class CardEntry:
-    name: str              # display name
-    mana_cost_raw: str     # what user typed (cleaned)
+    name: str  # display name
+    mana_cost_raw: str  # what user typed (cleaned)
     card_type: str
     qty: int = 1
 

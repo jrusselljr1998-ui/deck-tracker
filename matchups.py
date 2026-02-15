@@ -18,9 +18,9 @@ def normalize_text(s: str) -> str:
 
 @dataclass
 class Match:
-    opponent: str          # e.g. "Mono-Red Aggro", "Azorius Control", "Gholdengo"
-    result: str            # "W", "L", or "D"
-    played_at: str         # timestamp string
+    opponent: str  # e.g. "Mono-Red Aggro", "Azorius Control", "Gholdengo"
+    result: str  # "W", "L", or "D"
+    played_at: str  # timestamp string
     notes: str = ""
 
     def to_dict(self) -> dict:
@@ -61,7 +61,9 @@ class MatchupTracker:
             raise ValueError("Result must be W, L, or D.")
         if not opponent:
             raise ValueError("Opponent cannot be blank.")
-        self._matches.append(Match(opponent=opponent, result=result, played_at=_now_iso(), notes=notes.strip()))
+        self._matches.append(
+            Match(opponent=opponent, result=result, played_at=_now_iso(), notes=notes.strip())
+        )
 
     def all_matches(self) -> list[Match]:
         return list(self._matches)

@@ -201,7 +201,9 @@ def menu() -> None:
             print("Note: imported cards use type 'Unknown' and empty cost; edit them later.")
 
         elif choice == "8":
-            include_ones = prompt_yes_no("Include '1 ' prefix on singletons? (y/n) [n]: ", default_no=True)
+            include_ones = prompt_yes_no(
+                "Include '1 ' prefix on singletons? (y/n) [n]: ", default_no=True
+            )
             out = export_decklist_text(deck, include_ones=include_ones)
             print("\n--- Exported Decklist ---")
             print(out if out.strip() else "(empty)")

@@ -46,7 +46,9 @@ class Deck:
             self._cards[key].qty = qty
         return True
 
-    def update_card(self, name: str, *, mana_cost: Optional[str] = None, card_type: Optional[str] = None) -> bool:
+    def update_card(
+        self, name: str, *, mana_cost: Optional[str] = None, card_type: Optional[str] = None
+    ) -> bool:
         key = normalize_name(name)
         if key not in self._cards:
             return False
@@ -150,12 +152,14 @@ class Deck:
         if sort_by == "type":
             results.sort(key=lambda x: ((x.card_type or "").lower(), normalize_name(x.name)))
         elif sort_by == "cost":
+
             def cost_key(e: CardEntry):
                 if e.has_x:
                     return (2, 0, normalize_name(e.name))
                 if e.numeric_cost is None:
                     return (1, 999, normalize_name(e.name))
                 return (0, e.numeric_cost, normalize_name(e.name))
+
             results.sort(key=cost_key)
         else:
             results.sort(key=lambda x: normalize_name(x.name))

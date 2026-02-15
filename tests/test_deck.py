@@ -74,10 +74,10 @@ def test_type_counts_respects_quantities():
 
 def test_cost_counts_buckets_numeric_unknown_and_x():
     d = Deck()
-    d.add_card("A", "2", "Creature", qty=2)     # bucket "2"
-    d.add_card("B", "", "Instant", qty=1)       # bucket "?"
-    d.add_card("C", "X", "Sorcery", qty=3)      # bucket "X"
-    d.add_card("D", "X3", "Sorcery", qty=1)     # bucket "X" (has X)
+    d.add_card("A", "2", "Creature", qty=2)  # bucket "2"
+    d.add_card("B", "", "Instant", qty=1)  # bucket "?"
+    d.add_card("C", "X", "Sorcery", qty=3)  # bucket "X"
+    d.add_card("D", "X3", "Sorcery", qty=1)  # bucket "X" (has X)
 
     counts = d.cost_counts()
     assert counts["2"] == 2

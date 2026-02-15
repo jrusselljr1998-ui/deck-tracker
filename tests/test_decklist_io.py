@@ -24,12 +24,14 @@ def test_parse_decklist_lines_supports_qty_x_and_singletons_and_ignores_comments
 
 def test_import_decklist_text_accumulates_duplicates():
     d = Deck()
-    text = "\n".join([
-        "2 Sol Ring",
-        "Sol Ring",
-        "3x Sol Ring",
-        "Command Tower",
-    ])
+    text = "\n".join(
+        [
+            "2 Sol Ring",
+            "Sol Ring",
+            "3x Sol Ring",
+            "Command Tower",
+        ]
+    )
 
     summary = import_decklist_text(d, text)
     assert summary["entries_added"] == 4
