@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtualenvs
+.venv/
+venv/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+
+# Test / tooling caches
+.pytest_cache/
+.ruff_cache/
+
+# OS
+.DS_Store
+
+# Local app data (you can remove these lines if you WANT to commit sample data)
+deck.json
+matchups.json

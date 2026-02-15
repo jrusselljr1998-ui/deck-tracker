@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deck-tracker"
+version = "0.1.0"
+description = "CLI MTG deck tracker with JSON persistence, import/export, and matchup tracking."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Jacob Russell" }]
+keywords = ["mtg", "cli", "deck", "tracker", "python"]
+
+# No runtime deps right now
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+  "ruff>=0.7",
+]
+
+[project.scripts]
+deck-tracker = "main:main"
+
+[tool.setuptools]
+# Package the project as simple modules (no folder restructure needed)
+py-modules = ["main", "deck", "card", "decklist_io", "matchups"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["__pycache__", ".venv", "venv", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = [
+  "E501",  # let formatter handle long lines
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
