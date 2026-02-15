@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from deck import Deck
 from decklist_io import export_decklist_text, import_decklist_text
 from matchups import MatchupTracker
@@ -184,7 +186,7 @@ def menu() -> None:
 
         elif choice == "7":
             print("\nPaste decklist text. Enter a blank line to finish.")
-            lines = []
+            lines: list[str] = []
             while True:
                 line = input()
                 if line.strip() == "":
@@ -222,9 +224,9 @@ def menu() -> None:
 
         elif choice == "10":
             print("\n--- Matchup Stats ---")
-            w, l, d = tracker.overall_record()
-            total = w + l + d
-            print(f"Overall: {w}-{l}-{d} (Total: {total})")
+            wins, losses, draws = tracker.overall_record()
+            total = wins + losses + draws
+            print(f"Overall: {wins}-{losses}-{draws} (Total: {total})")
             print(f"Winrate (D = half-win): {tracker.winrate_overall():.1f}%")
 
             rows = tracker.winrate_by_opponent()
@@ -258,7 +260,6 @@ def menu() -> None:
 
 
 def main() -> None:
-    # Entry point used by `deck-tracker` console script
     menu()
 
 

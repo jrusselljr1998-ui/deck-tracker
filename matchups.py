@@ -7,7 +7,6 @@ from datetime import datetime
 
 
 def _now_iso() -> str:
-    # Local time, ISO-like string (sortable and readable)
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
@@ -17,9 +16,9 @@ def normalize_text(s: str) -> str:
 
 @dataclass
 class Match:
-    opponent: str  # e.g. "Mono-Red Aggro", "Azorius Control", "Gholdengo"
-    result: str  # "W", "L", or "D"
-    played_at: str  # timestamp string
+    opponent: str
+    result: str  # "W", "L", "D"
+    played_at: str
     notes: str = ""
 
     def to_dict(self) -> dict:
@@ -45,11 +44,6 @@ class Match:
 
 
 class MatchupTracker:
-    """
-    Tracks match-level results vs opponent archetypes.
-    Stored as a list (history), newest last.
-    """
-
     def __init__(self) -> None:
         self._matches: list[Match] = []
 
@@ -75,68 +69,54 @@ class MatchupTracker:
         return items[-n:]
 
     def overall_record(self) -> tuple[int, int, int]:
-        w = sum(1 for m in self._matches if m.result == "W")
-        l = sum(1 for m in self._matches if m.result == "L")
-        d = sum(1 for m in self._matches if m.result == "D")
-        return w, l, d
+        wins = sum(1 for m in self._matches if m.result == "W")
+        losses = sum(1 for m in self._matches if m.result == "L")
+        draws = sum(1 for m in self._matches if m.result == "D")
+        return wins, losses, draws
 
     @staticmethod
-    def _winrate(w: int, l: int, d: int) -> float:
-        total = w + l + d
+    def _winrate(wins: int, losses: int, draws: int) -> float:
+        total = wins + losses + draws
         if total == 0:
             return 0.0
-        # count draw as half-win (common in stats)
-        return (w + 0.5 * d) / total * 100.0
+        return (wins + 0.5 * draws) / total * 100.0
 
     def winrate_overall(self) -> float:
-        w, l, d = self.overall_record()
-        return self._winrate(w, l, d)
+        wins, losses, draws = self.overall_record()
+        return self._winrate(wins, losses, draws)
 
     def record_by_opponent(self) -> dict[str, tuple[int, int, int]]:
-        """
-        Returns: {opponent_display_name: (W, L, D)}
-        Uses normalized key for grouping, but preserves a representative display name.
-        """
         bucket: dict[str, tuple[str, int, int, int]] = {}
-        # key -> (display, w, l, d)
-
         for m in self._matches:
             key = normalize_text(m.opponent)
             if key not in bucket:
                 bucket[key] = (m.opponent, 0, 0, 0)
-            display, w, l, d = bucket[key]
+            display, wins, losses, draws = bucket[key]
             if m.result == "W":
-                w += 1
+                wins += 1
             elif m.result == "L":
-                l += 1
+                losses += 1
             else:
-                d += 1
-            bucket[key] = (display, w, l, d)
+                draws += 1
+            bucket[key] = (display, wins, losses, draws)
 
         out: dict[str, tuple[int, int, int]] = {}
-        for _key, (display, w, l, d) in bucket.items():
-            out[display] = (w, l, d)
+        for _key, (display, wins, losses, draws) in bucket.items():
+            out[display] = (wins, losses, draws)
 
-        # Sort by total games desc, then name
-        out_sorted = dict(
+        return dict(
             sorted(
                 out.items(),
                 key=lambda kv: (-(kv[1][0] + kv[1][1] + kv[1][2]), kv[0].lower()),
             )
         )
-        return out_sorted
 
     def winrate_by_opponent(self) -> list[tuple[str, int, int, int, float]]:
-        """
-        Returns a list of tuples:
-        (opponent, W, L, D, winrate_percent)
-        """
-        rows = []
-        for opp, (w, l, d) in self.record_by_opponent().items():
-            rows.append((opp, w, l, d, self._winrate(w, l, d)))
+        rows: list[tuple[str, int, int, int, float]] = []
+        for opp, (wins, losses, draws) in self.record_by_opponent().items():
+            rows.append((opp, wins, losses, draws, self._winrate(wins, losses, draws)))
         return rows
 
-    # ---------- Persistence ----------
     def to_dict(self) -> dict:
         return {"matches": [m.to_dict() for m in self._matches]}
 
@@ -157,7 +137,6 @@ class MatchupTracker:
             if isinstance(data, dict):
                 matches = data.get("matches", [])
             elif isinstance(data, list):
-                # old/simple format support if you ever saved as list
                 matches = data
             else:
                 return MatchupTracker()
